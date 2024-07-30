@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.RestService;
 using UnityEngine;
 
 public class flicker : MonoBehaviour
@@ -54,7 +53,8 @@ public class flicker : MonoBehaviour
                 nextFlickerTime = Time.time + flickerDuration;
             }
             // update elapsed time
-            elapsedTime = Time.time - startTime;
+            // elapsedTime = Time.time - startTime;
+            elapsedTime += Time.deltaTime;
             // wait until next frame
             yield return null;
         }
