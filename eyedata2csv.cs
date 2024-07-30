@@ -12,9 +12,6 @@ public class eyetrack : MonoBehaviour
     [SerializeField]
     private GazeInteractor gazeInteractor;
 
-    [SerializeField]
-    private GameObject objectofinterest;
-
     // to write tracking data 
     private StreamWriter trackerdata;
 
@@ -26,24 +23,32 @@ public class eyetrack : MonoBehaviour
         trackerdata = new StreamWriter(filepath);
         // ensuring dat ais written immediately 
         trackerdata.AutoFlush = true;
+        UnityEngine.Debug.Log(filepath);
     }
 
     private void Update()
     {
-        // constructing ray from gaze origin in the direction of gaze extended by 3 units  
-        var ray = new Ray(gazeInteractor.rayOriginTransform.position, 
-            gazeInteractor.rayOriginTransform.forward * 3);
+        //// constructing ray from gaze origin in the direction of gaze extended by 3 units  
+        //var ray = new Ray(gazeInteractor.rayOriginTransform.position, 
+        //    gazeInteractor.rayOriginTransform.forward * 3);
         // perform rayacst and stores info of hits 
-        Physics.Raycast(ray, out var hit);
+        //Physics.Raycast(ray, out var hit);
         // write hits to CSV
-        WriteTrackingPoint(hit.point);
+        //WriteTrackingPoint(hit.point);
+
+        // get current gaze direction
+        Vector3 gazeDirection = gazeInteractor.rayOriginTransform.forward;
+
+        // log the gaze direction
+        WriteTrackingPoint(gazeDirection);
+
     }
 
     // method to write to CSV
-    private void WriteTrackingPoint(Vector3 hitPoint)
+    private void WriteTrackingPoint(Vector3 gazeDirection)
     {
         // writes the x, y, z coordinates 
-        trackerdata.WriteLine(FormattableString.Invariant($"{hitPoint.x}, {hitPoint.y}, {hitPoint.z}"));
+        trackerdata.WriteLine(FormattableString.Invariant($"{Time.time}, {gazeDirection.x}, {gazeDirection.y}, {gazeDirection.z}"));
     }
 
     // called when script instance is destroyed to ensure
