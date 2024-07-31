@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LSL;
 
 public class cueControl : MonoBehaviour
 {
@@ -23,8 +24,13 @@ public class cueControl : MonoBehaviour
 
     // reference from flickerControl 
     private float flickerPeriod;
+    private float freq1;
+    private float freq2;
     private flickerControl flickerControl1;
     private flickerControl flickerControl2;
+
+    // LSL outlet
+    private LSLMarkerStream markerStream;
 
 
     void Start()
@@ -39,6 +45,11 @@ public class cueControl : MonoBehaviour
         flickerControl1 = Flicker1.GetComponent<flickerControl>();
         flickerControl2 = Flicker2.GetComponent<flickerControl>();
         flickerPeriod = flickerControl1.trialDuration;
+        freq1 = flickerControl1.flickerFrequency;
+        freq2 = flickerControl2.flickerFrequency;
+
+        // get LSL marker component 
+        markerStream = FindObjectOfType<LSLMarkerStream>();
 
         // start experiment loop
         StartCoroutine(RunExperiment());
@@ -62,6 +73,9 @@ public class cueControl : MonoBehaviour
     // single trial logic
     IEnumerator BeginTrial()
     {
+        // initialise string marker 
+        string markerstr = ""; 
+
         // randomise the cues
         if (Random.value > 0.5f)
         {
@@ -69,6 +83,9 @@ public class cueControl : MonoBehaviour
             cueLeft.SetActive(true);
             yield return new WaitForSeconds(cueDuration);
             cueLeft.SetActive(false);
+
+            // set marker string as left stim freq
+            markerstr = freq1.ToString();
         }
         else
         {
@@ -76,16 +93,25 @@ public class cueControl : MonoBehaviour
             cueRight.SetActive(true);
             yield return new WaitForSeconds(cueDuration);
             cueRight.SetActive(false);
+
+            // set marker string as right stim freq
+            markerstr = freq2.ToString();
         }
+
+        // send LSL marker 
+        markerStream.Write(markerstr);
 
         // show flickers
         Flicker1.SetActive(true);
         Flicker2.SetActive(true);
+   
         // running the flicker script
         flickerControl1.Start();
         flickerControl2.Start();
+
         // running until the flicker period
         yield return new WaitForSeconds(flickerPeriod);
+        
         // hide flicker
         Flicker1.SetActive(false);
         Flicker2.SetActive(false);
