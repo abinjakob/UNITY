@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class flicker : MonoBehaviour
+public class flickerControl : MonoBehaviour
 {
     private Renderer rend;
     // flicker frequency 
-    public float flickerFrequency = 15f;  
+    public float flickerFrequency = 15f;
     // set color for on and off state 
     public Color onColor = Color.white;
     public Color offColor = Color.black;
@@ -18,7 +18,7 @@ public class flicker : MonoBehaviour
     private float flickerDuration;
 
 
-    void Start()
+    public void Start()
     {
         // to ensure consistent frame rate in UNITY
         Application.targetFrameRate = 60;
@@ -36,7 +36,7 @@ public class flicker : MonoBehaviour
     IEnumerator FlickerBox()
     {
         // start time
-        float startTime = Time.time; 
+        float startTime = Time.time;
         // variable to track elapsed time
         float elapsedTime = 0f;
         bool isOn = true;
@@ -44,7 +44,7 @@ public class flicker : MonoBehaviour
         // loop until elapsed time reaches flicker time
         while (elapsedTime < trialDuration)
         {
-            if(Time.time >= nextFlickerTime)
+            if (Time.time >= nextFlickerTime)
             {
                 // toggle color
                 rend.material.color = isOn ? onColor : offColor;
