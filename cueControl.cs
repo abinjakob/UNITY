@@ -10,6 +10,8 @@ public class cueControl : MonoBehaviour
     public GameObject Flicker1;
     public GameObject Flicker2;
 
+    // experiment start delay
+    public float startDelay = 5;
     // cue duration
     public float cueDuration = 2f;
     // total number of trials
@@ -45,6 +47,7 @@ public class cueControl : MonoBehaviour
     //experiment loop coroutine
    IEnumerator RunExperiment()
     {
+        yield return new WaitForSeconds(startDelay);
         // loop over trials 
         for (int i = 0; i < trialcount; i++)
         {
