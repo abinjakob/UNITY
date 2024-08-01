@@ -1,6 +1,6 @@
 Gaze direction and gaze position are two distinct concepts in the context of eye tracking and mixed reality:
 
-**Gaze Direction**
+###Gaze Direction
 Gaze direction refers to the orientation or the vector indicating where the user is looking. It is usually represented as a normalized 3D vector (a unit vector) that points from the user's eye position in the direction they are looking. This vector doesn't have a specific endpoint; it merely indicates the direction of the gaze.
 Example: If the user is looking straight ahead, the gaze direction might be (0, 0, 1).
 
