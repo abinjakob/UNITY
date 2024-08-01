@@ -12,11 +12,11 @@ public class LSLMarkerStream : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // create a new stream info
-        // info: stream name, stream type, channel count, irregular sampling rate, string format
+        // create a new LSL stream info
+        // info: stream name, stream type, channel count, irregular sampling rate, data format
         streamInfo = new StreamInfo("EventMarkers", "Markers", 1, LSL.LSL.IRREGULAR_RATE, channel_format_t.cf_string);
         
-        // create outlet
+        // create LSL outlet
         outlet = new StreamOutlet(streamInfo);
     }
 
