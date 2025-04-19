@@ -1,7 +1,7 @@
+using Network;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using LSL;
 
 public class cueControl : MonoBehaviour
 {
@@ -29,8 +29,8 @@ public class cueControl : MonoBehaviour
     private flickerControl flickerControl1;
     private flickerControl flickerControl2;
 
-    // LSL outlet
-    private LSLMarkerStream markerStream;
+    private ConnectionManager connectionManager;
+
 
 
     void Start()
@@ -48,15 +48,12 @@ public class cueControl : MonoBehaviour
         freq1 = flickerControl1.flickerFrequency;
         freq2 = flickerControl2.flickerFrequency;
 
-        // get LSL marker component 
-        markerStream = FindObjectOfType<LSLMarkerStream>();
-
         // start experiment loop
         StartCoroutine(RunExperiment());
     }
 
     //experiment loop coroutine
-   IEnumerator RunExperiment()
+    IEnumerator RunExperiment()
     {
         yield return new WaitForSeconds(startDelay);
         // loop over trials 
@@ -74,7 +71,7 @@ public class cueControl : MonoBehaviour
     IEnumerator BeginTrial()
     {
         // initialise string marker 
-        string markerstr = ""; 
+        string markerstr = "";
 
         // randomise the cues
         if (Random.value > 0.5f)
@@ -98,20 +95,24 @@ public class cueControl : MonoBehaviour
             markerstr = freq2.ToString();
         }
 
-        // send LSL marker 
-        markerStream.Write(markerstr);
+        // Send the marker using the connection manager
+        if (connectionManager != null)
+        {
+            connectionManager.Send(markerstr, "MarkerStream");
+            Debug.Log("Sending marker: " + markerstr);
+        }
 
         // show flickers
         Flicker1.SetActive(true);
         Flicker2.SetActive(true);
-   
+
         // running the flicker script
-        flickerControl1.Start();
-        flickerControl2.Start();
+        flickerControl1.StartFlickering();
+        flickerControl2.StartFlickering();
 
         // running until the flicker period
         yield return new WaitForSeconds(flickerPeriod);
-        
+
         // hide flicker
         Flicker1.SetActive(false);
         Flicker2.SetActive(false);
